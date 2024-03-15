@@ -1,62 +1,37 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import { SafeAreaProvider } from "react-native-safe-area-view";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./Screens/HomeScreen";
-import MapScreen from "./Screens/MapScreen";
-import { KeyboardAvoidingView } from "react-native";
-import NavigatorCard from "./components/NavigatorCard";
-import FS from "./Screens/FoodScreen";
-import FoodScreen from "./Screens/FoodScreen";
+import TabNavigator from "./src/navigation/TabNavigator";
+import { useState } from "react";
+import { AuthProvider } from "./src/features/authContext";
+import { ProductProvider } from "./src/features/productContext";
+import { CartProvider } from "./src/features/cartContext";
+import { OrderProvider } from "./src/features/orderContext";
+import  "react-native-tailwindcss";
 
 export default function App() {
-  const Stack = createNativeStackNavigator();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [products, setProducts] = useState(null);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [cartItems, setCartItems] = useState(null);
+  const [orders, setOrders] = useState(null);
 
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <SafeAreaProvider>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-            keyboardVerticalOffset={Platform.OS === "ios" ? -64 : 0}
-          >
-            <Stack.Navigator>
-              <Stack.Screen
-                name="HomeScreen"
-                component={HomeScreen}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="MapScreen"
-                component={MapScreen}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="NavigatorCard"
-                component={NavigatorCard}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="FoodScreen"
-                component={FoodScreen}
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack.Navigator>
-          </KeyboardAvoidingView>
-        </SafeAreaProvider>
-      </NavigationContainer>
-    </Provider>
+    <AuthProvider
+      value={{ isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser }}
+    >
+      <ProductProvider
+        value={{ products, setProducts, currentProduct, setCurrentProduct }}
+      >
+        <CartProvider value={{ cartItems, setCartItems }}>
+          <OrderProvider value={{ orders, setOrders }}>
+            <NavigationContainer>
+              <TabNavigator />
+            </NavigationContainer>
+          </OrderProvider>
+        </CartProvider>
+      </ProductProvider>
+    </AuthProvider>
   );
 }

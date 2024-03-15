@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "citycruise",
-    "slug": "citycruise",
+    "name": "Lucky-Fashion",
+    "slug": "lucky-fashion",
     "version": "1.0.0",
+    "packageType": "apk",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,16 +16,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "y"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lalit_namdev.ecomv2"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/Logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "595e9bc0-2904-461f-9dd4-c75bb5c56e43"
+      }
+    },
+    "owner": "heylalit"
   }
 }
