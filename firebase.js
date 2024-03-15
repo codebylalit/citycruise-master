@@ -15,6 +15,7 @@ const firebaseConfig = {
   storageBucket: "lucky-fashion-90fa1.appspot.com",
   messagingSenderId: "725701763080",
   appId: "1:725701763080:android:577954a0906f252bb1f1bd",
+  
 };
 
 // Initialize Firebase
