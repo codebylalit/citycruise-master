@@ -48,58 +48,24 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
    setLoading(false);
  };
 
-  const handleRegister = async () => {
-    setLoading(true);
-    const res = await registerWithEmailAndPassword(name, email, password);
-    if (res.success === true) {
-      setCurrentUser({ name, email });
-      setModalVisible(false);
-      setIsLoggedIn(true);
-    }
+ const handleRegister = async () => {
+  setLoading(true);
+  // Check if the password length is less than 6
+  if (password.length < 6) {
+    Alert.alert("Password Too Short", "Password should be at least 6 characters long.");
     setLoading(false);
-  };
+    return;
+  }
+  // Proceed with registration if password length is valid
+  const res = await registerWithEmailAndPassword(name, email, password);
+  if (res.success === true) {
+    setCurrentUser({ name, email });
+    setModalVisible(false);
+    setIsLoggedIn(true);
+  }
+  setLoading(false);
+};
 
-  const handlePhoneLogin = async () => {
-    setLoading(true);
-    try {
-      // Check if email is provided
-      if (!email) {
-        // Email not provided, proceed with phone number login without email
-        const verificationId = await loginUserWithPhoneNumber(phoneNumber);
-        setVerificationId(verificationId);
-      } else {
-        // Email provided, proceed with phone number login including email
-        const verificationId = await loginUserWithPhoneNumber(
-          phoneNumber,
-          email
-        );
-        setVerificationId(verificationId);
-      }
-    } catch (error) {
-      console.error("Phone login error:", error);
-      // Handle error
-    }
-    setLoading(false);
-  };
-
-
-  const handleOTPVerification = async () => {
-    setLoading(true);
-    try {
-      const res = await confirmOTP(verificationId, otp);
-      if (res.success === true) {
-        setCurrentUser(res.user);
-        setModalVisible(false);
-        setIsLoggedIn(true);
-      } else {
-        // Handle OTP verification failure
-      }
-    } catch (error) {
-      console.error("OTP verification error:", error);
-      // Handle error
-    }
-    setLoading(false);
-  };
 
   useEffect(() => {
     if (currentUser) {
@@ -172,45 +138,16 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
               onChangeText={setPassword}
               secureTextEntry={true}
             />
-            {/* Render phone number input only for phone login */}
-            {type === "phone" && (
-              <>
-                <Text style={styles.label}>Phone Number:</Text>
-                <TextInput
-                  style={styles.input}
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  keyboardType="phone-pad"
-                />
-              </>
-            )}
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "#000" }]}
               onPress={
-                type === "phone" ? handlePhoneLogin : handleRegister // Use phone login handler if type is phone
+                 handleRegister // Use phone login handler if type is phone
               }
             >
               <Text style={styles.buttonText}>
-                {type === "phone" ? "Login with Phone" : "Register"}
+                {"Register"}
               </Text>
             </TouchableOpacity>
-            {/* Render OTP input only if verificationId exists */}
-            {verificationId && (
-              <>
-                <Text style={styles.label}>Enter OTP:</Text>
-                <TextInput
-                  style={styles.input}
-                  value={otp}
-                  onChangeText={setOtp}
-                />
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: "#000" }]}
-                  onPress={handleOTPVerification}
-                >
-                  <Text style={styles.buttonText}>Verify OTP</Text>
-                </TouchableOpacity>
-              </>
-            )}
             <View style={styles.switch}>
               <Text style={styles.switchText}>Already a User?</Text>
               <Pressable onPress={() => setType("login")}>

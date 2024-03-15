@@ -12,45 +12,6 @@ const CartScreen = ({ navigation }) => {
   const { cartItems } = useContext(CartContext); // Removed setCartItems
   const [itemCount, setItemCount] = useState(0);
 
-  const calculateTotalAmount = async (data) => {
-    if (!data) {
-      console.error("Data is undefined or null");
-      return;
-    }
-    console.log("Cart items:", data); // Log cart items received
-
-    const subTotal = await data.reduce(
-      (acc, item) => acc + Number(item.price) * Number(item.qty),
-      0
-    );
-
-    // Define discount thresholds and corresponding discounts
-    const discounts = [
-      { threshold: 1500, discount: 200 },
-      { threshold: 3000, discount: 400 },
-    ];
-
-    // Initialize total with original subtotal
-    let totalWithDiscounts = subTotal;
-
-    // Apply discounts based on thresholds
-    for (let i = discounts.length - 1; i >= 0; i--) {
-      const { threshold, discount } = discounts[i];
-      if (subTotal >= threshold) {
-        totalWithDiscounts -= discount;
-        break; // Apply only the first discount that meets the threshold
-      }
-    }
-
-    // Ensure the total doesn't go below zero
-    totalWithDiscounts = Math.max(0, totalWithDiscounts);
-
-    setTotal(totalWithDiscounts.toFixed(2));
-    console.log("Subtotal:", subTotal);
-    console.log("Total with discounts:", totalWithDiscounts);
-  };
-
-
   const fetchCartItems = async () => {
     const res = await getCartItems();
     if (res.success === true) {
@@ -93,7 +54,7 @@ const CartScreen = ({ navigation }) => {
               <CartItem
                 key={`${item.id}-${index}`} // Ensure each key is unique by combining id and index
                 id={item.id}
-                name={item.name}
+                name={item.name || item.title}
                 size={item.size}
                 quantity={item.quantity}
                 images={item.images}

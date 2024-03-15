@@ -45,6 +45,8 @@ const MainStackNavigator = () => {
       <Stack.Screen name="KurtiSetsCategory" component={KurtiSets} />
       <Stack.Screen name="ProductItem" component={ProductItem} />
       <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen}/>
+      <Stack.Screen name="Profile" component={ProfileScreen}/>
+
     </Stack.Navigator>
   );
 }

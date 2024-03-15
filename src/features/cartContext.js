@@ -1,4 +1,3 @@
-// CartContext.js
 import React, { createContext, useState } from "react";
 
 const CartContext = createContext();
@@ -21,7 +20,7 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, totalPrice, addToCart, removeItem }}
+      value={{ cartItems, totalPrice, addToCart, removeItem, setCartItems }} // Include setCartItems in the value object
     >
       {children}
     </CartContext.Provider>

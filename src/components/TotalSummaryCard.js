@@ -4,8 +4,8 @@ import {
   Text,
   View,
   Pressable,
-  ToastAndroid,
   Linking,
+  ToastAndroid,
 } from "react-native";
 import CartContext from "../features/cartContext";
 import { Share } from "react-native";
@@ -16,7 +16,6 @@ const TotalSummaryCard = () => {
   const calculateTotalPrice = () => {
     let total = 0;
     if (cartItems && cartItems.length > 0) {
-      // Check if cartItems is defined
       cartItems.forEach((item) => {
         const price = parseFloat(item.price);
         const qty = parseInt(item.quantity);
@@ -25,13 +24,31 @@ const TotalSummaryCard = () => {
         }
       });
     }
-    return total.toFixed(2);
+    return total;
+  };
+
+  const calculateDiscountedPrice = (total) => {
+    const discounts = [
+      { threshold: 1500, discount: 200 },
+      { threshold: 3000, discount: 400 },
+    ];
+
+    let discountedPrice = total;
+
+    for (let i = discounts.length - 1; i >= 0; i--) {
+      const { threshold, discount } = discounts[i];
+      if (total >= threshold) {
+        discountedPrice -= discount;
+        break;
+      }
+    }
+
+    return discountedPrice;
   };
 
   const placeOrder = async () => {
     try {
       if (!cartItems || cartItems.length === 0) {
-        // Show a message if the cart is empty
         ToastAndroid.show("Your cart is empty", ToastAndroid.SHORT);
         return;
       }
@@ -41,7 +58,7 @@ const TotalSummaryCard = () => {
         title: "Place Order",
       });
       ToastAndroid.show("Order placed successfully!!!", ToastAndroid.BOTTOM);
-      setCartItems([]); // Clear cartItems after placing order
+      setCartItems([]);
     } catch (error) {
       console.error("Error placing order:", error);
       ToastAndroid.show(
@@ -57,7 +74,7 @@ const TotalSummaryCard = () => {
       orderDetails = items
         .map(
           (item) =>
-            ` Name: ${item.name} - Qty: ${item.quantity} Size: ${item.size} Description: ${item.description} Price: ${item.price} `
+            ` Name: ${item.name || item.title } - Qty: ${item.quantity} Size: ${item.size} Description: ${item.description} Price: ${item.price} `
         )
         .join("\n");
     } else {
@@ -68,22 +85,31 @@ const TotalSummaryCard = () => {
     }
     return orderDetails;
   };
-  console.log("productdetails",generateOrderDetails)
 
   const openWhatsApp = async (deliveryType) => {
     const message = generateOrderDetails(cartItems, deliveryType);
-    console.log(message)
     const phoneNumber = "+91 8094466693";
     Linking.openURL(`whatsapp://send?phone=${phoneNumber}&text=${message}`);
   };
 
   const totalPrice = calculateTotalPrice();
+  const discountedPrice = calculateDiscountedPrice(totalPrice);
+  const showDiscountedPrice = discountedPrice !== totalPrice;
 
   return (
     <View style={styles.container}>
       <View style={styles.priceContainer}>
         <Text style={styles.totalPriceLabel}>Total Price:</Text>
-        <Text style={styles.totalPriceValue}>₹{totalPrice}</Text>
+        {showDiscountedPrice ? (
+          <>
+            <Text style={[styles.totalPrice, styles.strikeThrough]}>
+              ₹{totalPrice}
+            </Text>
+            <Text style={styles.totalPriceValue}>₹{discountedPrice}</Text>
+          </>
+        ) : (
+          <Text style={styles.totalPriceND}>₹{totalPrice}</Text>
+        )}
       </View>
       <View style={{ flexDirection: "column", paddingVertical: 10 }}>
         <Pressable
@@ -116,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 5,
   },
   totalPriceLabel: {
     fontWeight: "bold",
@@ -125,6 +151,17 @@ const styles = StyleSheet.create({
   totalPriceValue: {
     fontWeight: "bold",
     fontSize: 20,
+  },
+  totalPriceND: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  totalPrice:{
+    color:"gray",
+    left:75
+  },
+  strikeThrough: {
+    textDecorationLine: "line-through",
   },
   whatsappButton: {
     padding: 15,
@@ -139,6 +176,6 @@ const styles = StyleSheet.create({
   },
   additionalInfoText: {
     fontSize: 7,
-    color: "red",
+    color: "gray",
   },
 });

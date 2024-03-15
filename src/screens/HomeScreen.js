@@ -68,6 +68,10 @@ const navigateToAddProductScreen = () => {
   navigation.navigate("addproductscreen");
   setPasswordModalVisible(false);
 };
+const navigateToProfile = () => {
+  // Navigate to the addproductscreen
+  navigation.navigate("Profile");
+};
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e6e6fa" }}>
       <ScrollView>
@@ -140,24 +144,26 @@ const navigateToAddProductScreen = () => {
               </Text>
             </Pressable>
           ) : (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={{
-                  justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "black",
-                  borderRadius: 50,
-                  paddingVertical: 5,
-                  paddingHorizontal: 16,
-                  fontWeight: "bold",
-                  color: "black",
-                  height: 30,
-                  width: 60,
-                }}
-              >
-                {currentUser?.name}
-              </Text>
-            </View>
+            <Pressable onPress={navigateToProfile} >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={{
+                    justifyContent: "center",
+                    borderWidth: 1,
+                    borderColor: "black",
+                    borderRadius: 50,
+                    paddingVertical: 5,
+                    paddingHorizontal: 16,
+                    fontWeight: "bold",
+                    color: "black",
+                    height: 30,
+                    width: 60,
+                  }}
+                >
+                  {currentUser?.name}
+                </Text>
+              </View>
+            </Pressable>
           )}
         </View>
         <View style={{ marginTop: 15, paddingHorizontal: 15 }}>
@@ -187,7 +193,6 @@ const navigateToAddProductScreen = () => {
             >
               New Arrivals
             </Text>
-
             <Pressable onPress={() => navigation.navigate("productlistscreen")}>
               <Text style={{ fontSize: 14, color: "#757575" }}>View All</Text>
             </Pressable>
@@ -228,7 +233,7 @@ const navigateToAddProductScreen = () => {
               marginBottom: 4,
             }}
           >
-            Categories
+          Categories
           </Text>
           <View
             style={{
@@ -312,7 +317,11 @@ const navigateToAddProductScreen = () => {
                 placeholder="Password"
                 onChangeText={(text) => setEnteredPassword(text)}
               />
-              <Button title="Submit" color={"green"} onPress={handlePasswordSubmit} />
+              <Button
+                title="Submit"
+                color={"green"}
+                onPress={handlePasswordSubmit}
+              />
             </View>
           </View>
         </Modal>

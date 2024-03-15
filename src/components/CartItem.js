@@ -1,17 +1,28 @@
-// CartItem.js
-
 import React, { useContext } from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import CartContext from "../features/cartContext";
+import CartContext from "../features/cartContext"; // Import CartContext
 import { times } from "lodash";
 
-const CartItem = ({ name, title, images, price, quantity, id, size, description }) => {
-  const { removeItem } = useContext(CartContext); // Accessing removeItem from CartContext
+const CartItem = ({
+  name,
+  title,
+  images,
+  price,
+  quantity,
+  id,
+  size,
+  description,
+}) => {
+  const { cartItems, setCartItems } = useContext(CartContext); // Accessing cartItems and setCartItems from CartContext
 
   const handleRemoveItem = () => {
-    removeItem(id); // Call the removeItem function with the item id
-    console.log("remove products",id)
+    // Filter out the item with the same id and size
+    const updatedCartItems = cartItems.filter(
+      (item) => !(item.id === id && item.size === size)
+    );
+    setCartItems(updatedCartItems); // Update the cart with the filtered items
+    console.log("remove products", id);
   };
 
   return (
@@ -20,9 +31,7 @@ const CartItem = ({ name, title, images, price, quantity, id, size, description 
         <Image source={{ uri: images[0] }} style={styles.image} />
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>
-          {title || name}
-        </Text>
+        <Text style={styles.title}>{title || name}</Text>
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.qty}>Size: {size}</Text>
         <Text style={styles.qty}>Quantity: {quantity}</Text>
