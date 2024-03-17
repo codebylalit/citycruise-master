@@ -7,17 +7,16 @@ import {
   TextInput,
   StyleSheet,
   Dimensions,
-  Pressable,
   ActivityIndicator,
+  Pressable,
   Alert,
 } from "react-native";
 import AuthContext from "../features/authContext";
-
 import {
   loginWithEmailAndPassword,
   registerWithEmailAndPassword,
-
-} from "../features/firebase/userAuth"; // Import the function for phone number authentication
+} from "../features/firebase/userAuth";
+import { Ionicons } from "@expo/vector-icons"; // Assuming you're using Expo for vector icons
 
 const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
   const [type, setType] = useState("login");
@@ -26,9 +25,9 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn } =
+  const { currentUser, setCurrentUser, setIsLoggedIn } =
     useContext(AuthContext);
-
+  
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -46,7 +45,6 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
 
   const handleRegister = async () => {
     setLoading(true);
-    // Check if the password length is less than 6
     if (password.length < 6) {
       Alert.alert(
         "Password Too Short",
@@ -55,7 +53,6 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
       setLoading(false);
       return;
     }
-    // Proceed with registration if password length is valid
     const res = await registerWithEmailAndPassword(name, email, password);
     if (res.success === true) {
       setCurrentUser({ name, email });
@@ -81,81 +78,81 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
       }}
     >
       <View style={styles.overlay}>
-        {type === "login" ? (
-          <View style={styles.modalContent}>
-            <Text style={styles.label}>Email:</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
-            <Text style={styles.label}>Password:</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={true}
-            />
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#000" }]}
-              onPress={handleLogin}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-            <View style={styles.switch}>
-              <Text style={styles.switchText}>Not a User?</Text>
-              <Pressable onPress={() => setType("register")}>
-                <Text style={[styles.switchText, { fontWeight: "bold" }]}>
-                  {" "}
-                  Register
-                </Text>
-              </Pressable>
+        <View style={styles.modalContent}>
+          {type === "login" ? (
+            <View>
+              <Text style={styles.label}>Email:</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+              <Text style={styles.label}>Password:</Text>
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+              />
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: "#000" }]}
+                onPress={handleLogin}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+              <View style={styles.switch}>
+                <Text style={styles.switchText}>Not a User?</Text>
+                <Pressable onPress={() => setType("register")}>
+                  <Text style={[styles.switchText, { fontWeight: "bold" }]}>
+                    {" "}
+                    Register
+                  </Text>
+                </Pressable>
+              </View>
+              {loading && <ActivityIndicator />}
             </View>
-            {loading && <ActivityIndicator />}
-          </View>
-        ) : (
-          <View style={styles.modalContent}>
-            <Text style={styles.label}>Name:</Text>
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-            />
-            <Text style={styles.label}>Email:</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
-            <Text style={styles.label}>Password:</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={true}
-            />
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#000" }]}
-              onPress={
-                handleRegister // Use phone login handler if type is phone
-              }
-            >
-              <Text style={styles.buttonText}>{"Register"}</Text>
-            </TouchableOpacity>
-            <View style={styles.switch}>
-              <Text style={styles.switchText}>Already a User?</Text>
-              <Pressable onPress={() => setType("login")}>
-                <Text style={[styles.switchText, { fontWeight: "bold" }]}>
-                  {" "}
-                  Login
-                </Text>
-              </Pressable>
+          ) : (
+            <View>
+              <Text style={styles.label}>Name:</Text>
+              <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+              />
+              <Text style={styles.label}>Email:</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+              <Text style={styles.label}>Password:</Text>
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+              />
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: "#000" }]}
+                onPress={handleRegister}
+              >
+                <Text style={styles.buttonText}>Register</Text>
+              </TouchableOpacity>
+              <View style={styles.switch}>
+                <Text style={styles.switchText}>Already a User?</Text>
+                <Pressable onPress={() => setType("login")}>
+                  <Text style={[styles.switchText, { fontWeight: "bold" }]}>
+                    {" "}
+                    Login
+                  </Text>
+                </Pressable>
+              </View>
+              {loading && <ActivityIndicator />}
             </View>
-            {loading && <ActivityIndicator />}
-          </View>
-        )}
+          )}
+        </View>
       </View>
     </Modal>
   );
@@ -194,6 +191,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
+    marginLeft: 10,
   },
   switch: {
     flexDirection: "row",

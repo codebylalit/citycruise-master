@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Lucky-Fashion",
+    "scheme": "lucky-fashion",
     "slug": "lucky-fashion",
     "version": "1.0.0",
     "packageType": "apk",

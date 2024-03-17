@@ -70,7 +70,7 @@ const TabNavigator = () => {
         component={OrderStackNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="list-alt" size={size} color={color} />
+            <MaterialIcons name="favorite" size={size} color={color} />
           ),
         }}
       />

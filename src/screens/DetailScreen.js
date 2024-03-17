@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import CartContext from "../features/cartContext";
 import Swiper from "react-native-swiper";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ProductDetailScreen = ({ route }) => {
   const { product } = route.params;
   const { addToCart } = useContext(CartContext);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("Medium");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleIncrement = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -38,6 +40,10 @@ const ProductDetailScreen = ({ route }) => {
     console.log("prod details",productWithDetails)
   };
 
+   const toggleFavorite = () => {
+     setIsFavorite(!isFavorite);
+   };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -59,6 +65,14 @@ const ProductDetailScreen = ({ route }) => {
           <Text style={styles.name}>{product.name || product.title}</Text>
           <Text style={styles.price}>₹{product.price}</Text>
           <Text style={styles.description}>{product.description}</Text>
+
+          <TouchableOpacity style={styles.fav} onPress={toggleFavorite}>
+            <FontAwesome
+              name={isFavorite ? "heart" : "heart-o"}
+              size={30}
+            />
+          </TouchableOpacity>
+
 
           <View style={styles.selectionContainer}>
             <Text style={styles.selectionLabel}>Quantity:</Text>
@@ -199,6 +213,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
   },
+  fav:{
+    position:"absolute",
+    left:330
+  }
 });
 
 export default ProductDetailScreen;

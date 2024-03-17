@@ -3,12 +3,14 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import CartContext from "../features/cartContext";
 import { Button } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ProductItem = ({ id, title, name, description, images, price, isSold }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("Medium"); // Default size
   const { addToCart } = useContext(CartContext);
   const navigation = useNavigation();
+  const [isFavorite, setIsFavorite] = useState(false); // State for favorite status
 
   const handleAddToCart = () => {
     const product = {
@@ -31,6 +33,9 @@ const ProductItem = ({ id, title, name, description, images, price, isSold }) =>
     });
   };
 
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
 
   return (
     <TouchableOpacity onPress={handleProductDetail} style={styles.container}>
@@ -44,6 +49,12 @@ const ProductItem = ({ id, title, name, description, images, price, isSold }) =>
             {description}
           </Text>
           <Text style={styles.price}>₹{price}</Text>
+          <TouchableOpacity style={styles.fav} onPress={toggleFavorite}>
+            <FontAwesome
+              name={isFavorite ? "heart" : "heart-o"}
+              size={30}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -86,6 +97,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FF9057",
   },
+  fav:{
+    position:"absolute",
+    left:320,
+    top:20
+  }
 });
 
 export default ProductItem;
